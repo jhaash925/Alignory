@@ -273,6 +273,7 @@ function ATSDashboard({ result }) {
   const missingRequirements = breakdown?.missing_requirements || [];
   const qualityChecks = breakdown?.quality_checks || [];
   const explanationCards = breakdown?.explanation_cards || [];
+  const competencyCoverage = breakdown?.competency_coverage;
   const keywordHits = result.keyword_matched || [];
   const keywordMisses = result.keyword_missing || [];
   const passedChecks = qualityChecks.filter((check) => check.passed);
@@ -320,6 +321,20 @@ function ATSDashboard({ result }) {
           ]
     }
   ];
+
+  if (!isGeneralReview && competencyCoverage) {
+    scoreFactors.push({
+      title: "Competency Coverage",
+      value: `${competencyCoverage.blended_score ?? 0}%`,
+      description:
+        "This set-based score compares the job's required competencies with the competencies detected in your resume. It helps balance semantic similarity with concrete requirement coverage.",
+      factors: [
+        `${competencyCoverage.intersection_count || 0} of ${competencyCoverage.required_count || 0} required competencies found`,
+        `${competencyCoverage.required_only?.length || 0} required competencies still missing`,
+        `${competencyCoverage.resume_only?.length || 0} extra resume competencies detected outside this job description`
+      ]
+    });
+  }
 
   return (
 

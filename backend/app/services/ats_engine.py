@@ -815,6 +815,52 @@ def _find_best_evidence(aliases, text):
     return ""
 
 
+def _extract_competency_set(text):
+    normalized_text = _normalize_text(text or "")
+    competencies = set()
+
+    for requirement in REQUIREMENT_LIBRARY:
+        if any(_contains_alias(normalized_text, alias) for alias in requirement["aliases"]):
+            competencies.add(requirement["name"])
+
+    return competencies
+
+
+def _jaccard_competency_coverage(requirements, resume_text):
+    required_competencies = {item["name"] for item in requirements}
+    resume_competencies = _extract_competency_set(resume_text)
+
+    if not required_competencies:
+        return {
+            "score": 0,
+            "coverage_score": 0,
+            "intersection": [],
+            "required_only": [],
+            "resume_only": sorted(resume_competencies),
+            "required_count": 0,
+            "resume_count": len(resume_competencies),
+            "intersection_count": 0,
+            "union_count": len(resume_competencies),
+        }
+
+    intersection = required_competencies & resume_competencies
+    union = required_competencies | resume_competencies
+    jaccard_score = len(intersection) / len(union) if union else 0
+    coverage_score = len(intersection) / len(required_competencies)
+
+    return {
+        "score": jaccard_score,
+        "coverage_score": coverage_score,
+        "intersection": sorted(intersection),
+        "required_only": sorted(required_competencies - resume_competencies),
+        "resume_only": sorted(resume_competencies - required_competencies),
+        "required_count": len(required_competencies),
+        "resume_count": len(resume_competencies),
+        "intersection_count": len(intersection),
+        "union_count": len(union),
+    }
+
+
 def _extract_years(text):
     return [int(year) for year in re.findall(r"\b(19\d{2}|20\d{2})\b", text)]
 
@@ -2283,6 +2329,11 @@ def build_ats_breakdown(job_description, resume_text, parsed_resume):
         keyword_list,
         resume_text
     )
+    competency_coverage = _jaccard_competency_coverage(requirements, resume_text)
+    competency_score = (
+        competency_coverage["coverage_score"] * 0.7 +
+        competency_coverage["score"] * 0.3
+    )
 
     experience_text = " ".join(str(item) for item in parsed_resume.get("experience", []))
     projects_text = " ".join(str(item) for item in parsed_resume.get("projects", []))
@@ -2307,10 +2358,11 @@ def build_ats_breakdown(job_description, resume_text, parsed_resume):
         / len(matched_requirements)
         if matched_requirements else 0
     )
+    requirement_signal = requirement_score * 0.9 + competency_score * 0.1
 
     overall_score = int(
         (
-            requirement_score * 0.4 +
+            requirement_signal * 0.4 +
             section_score * 0.15 +
             keyword_score * 0.15 +
             experience_score * 0.15 +
@@ -2370,7 +2422,9 @@ def build_ats_breakdown(job_description, resume_text, parsed_resume):
     return {
         "overall_score": overall_score,
         "subscores": {
-            "requirements": int(requirement_score * 100),
+            "requirements": int(requirement_signal * 100),
+            "requirement_match": int(requirement_score * 100),
+            "competency_coverage": int(competency_score * 100),
             "section_strength": int(section_score * 100),
             "keyword_alignment": int(keyword_score * 100),
             "experience_relevance": int(experience_score * 100),
@@ -2384,6 +2438,12 @@ def build_ats_breakdown(job_description, resume_text, parsed_resume):
         "category_summary": category_summary,
         "primary_domain": primary_domain,
         "quality_checks": quality_checks,
+        "competency_coverage": {
+            **competency_coverage,
+            "score": int(competency_coverage["score"] * 100),
+            "coverage_score": int(competency_coverage["coverage_score"] * 100),
+            "blended_score": int(competency_score * 100),
+        },
         "keyword_matched": keyword_matched,
         "keyword_missing": keyword_missing,
         "explanation_cards": explanation_cards,
