@@ -1,13 +1,14 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel
 
-import pdfplumber
-import docx
-
 from app.services.resume_service import (
     generate_tailored_resume,
     generate_improved_resume_draft,
     generate_general_ats_review,
+)
+from app.services.text_extraction import (
+    extract_text_from_docx,
+    extract_text_from_pdf,
 )
 
 router = APIRouter()
@@ -77,30 +78,16 @@ def general_ats_review(request: ResumeReviewRequest):
     return generate_general_ats_review(request.resume_text)
 
 
-def extract_text_from_pdf(file):
-    text = ""
-    with pdfplumber.open(file) as pdf:
-        for page in pdf.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text + "\n"
-    return text
-
-
-def extract_text_from_docx(file):
-    document = docx.Document(file)
-    text = "\n".join([para.text for para in document.paragraphs])
-    return text
-
-
 @router.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...)):
 
-    if file.filename.endswith(".pdf"):
-        text = extract_text_from_pdf(file.file)
+    filename = (file.filename or "").lower()
 
-    elif file.filename.endswith(".docx"):
-        text = extract_text_from_docx(file.file)
+    if filename.endswith(".pdf"):
+        text, extraction = extract_text_from_pdf(file.file)
+
+    elif filename.endswith(".docx"):
+        text, extraction = extract_text_from_docx(file.file)
 
     else:
         raise HTTPException(
@@ -114,4 +101,7 @@ async def upload_resume(file: UploadFile = File(...)):
             detail="Could not extract readable text from the uploaded resume."
         )
 
-    return {"resume_text": text}
+    return {
+        "resume_text": text,
+        "extraction": extraction,
+    }

@@ -123,6 +123,7 @@ function GeneralReview() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingStage, setLoadingStage] = useState(0);
+  const [extractionInfo, setExtractionInfo] = useState(null);
 
   const handleAnalyze = async () => {
     if (!resumeFile) {
@@ -133,6 +134,7 @@ function GeneralReview() {
     setLoading(true);
     setLoadingStage(0);
     setResult(null);
+    setExtractionInfo(null);
     let backendStageInterval;
 
     try {
@@ -155,6 +157,7 @@ function GeneralReview() {
         throw new Error("No readable resume text was extracted");
       }
 
+      setExtractionInfo(uploadData.extraction || null);
       setLoadingStage(1);
 
       backendStageInterval = window.setInterval(() => {
@@ -181,7 +184,10 @@ function GeneralReview() {
 
       const data = await response.json();
       await new Promise((resolve) => window.setTimeout(resolve, 350));
-      setResult(data);
+      setResult({
+        ...data,
+        extraction: uploadData.extraction
+      });
     } catch (error) {
       window.clearInterval(backendStageInterval);
       alert(error.message || "Error reviewing resume");
@@ -262,9 +268,19 @@ function GeneralReview() {
                   type="file"
                   accept=".pdf,.docx"
                   className="hidden"
-                  onChange={(e) => setResumeFile(e.target.files[0])}
+                  onChange={(e) => {
+                    setResumeFile(e.target.files[0]);
+                    setExtractionInfo(null);
+                  }}
                 />
               </label>
+
+              {extractionInfo && (
+                <div className="mt-3 rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm leading-6 text-slate-600">
+                  Extracted {extractionInfo.text_words || 0} words using {extractionInfo.method === "ocr_fallback" ? "OCR fallback" : "direct text parsing"}.
+                  {extractionInfo.method === "ocr_fallback" && ` OCR was used on ${extractionInfo.pages_with_ocr || 0} page${extractionInfo.pages_with_ocr === 1 ? "" : "s"}.`}
+                </div>
+              )}
 
               <button
                 onClick={handleAnalyze}
