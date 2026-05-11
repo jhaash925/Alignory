@@ -89,6 +89,7 @@ function RequirementPanel({ title, items, tone, emptyText }) {
   };
 
   const recentTone = "bg-sky-100 text-sky-700";
+  const fuzzyTone = "bg-violet-100 text-violet-700";
 
   return (
     <div className={`rounded-[28px] border p-6 shadow-[0_16px_44px_rgba(15,23,42,0.06)] ${panelTone}`}>
@@ -130,8 +131,20 @@ function RequirementPanel({ title, items, tone, emptyText }) {
                       recent
                     </span>
                   )}
+
+                  {item.match_type === "fuzzy" && (
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${fuzzyTone}`}>
+                      fuzzy {item.fuzzy_score}%
+                    </span>
+                  )}
                 </div>
               </div>
+
+              {item.match_type === "fuzzy" && item.matched_text && (
+                <p className="mt-2 text-sm text-slate-500">
+                  Matched "{item.matched_text}" to "{item.matched_alias}".
+                </p>
+              )}
 
               {item.sections?.length > 0 && (
                 <p className="mt-2 text-sm text-slate-500">

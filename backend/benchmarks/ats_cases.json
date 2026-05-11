@@ -298,5 +298,26 @@
       "matched_requirements": ["Business Analysis", "Requirements Gathering", "Data Analysis", "Reporting", "Presentation Skills", "Stakeholder Management"],
       "missing_requirements": []
     }
+  },
+  {
+    "id": "frontend-fuzzy-typo-match",
+    "description": "A resume with obvious minor spelling variants should recover likely competency matches without marking absent skills as present.",
+    "job_description": "Looking for a frontend developer with JavaScript, React, CSS, responsive design, Git, and troubleshooting experience.",
+    "resume_text": "Candidate Resume\nEmail: typo@example.com\nPhone: +91 9090909090\n\nSKILLS\nJavascrip\nReact\nResponsve Design\nGit\n\nEXPERIENCE\nFrontend Developer | 2024 - Present\n- Built React interfaces with Javascrip and improved responsve design across landing pages.\n- Used Git for version control and debugged UI issues during releases.\n\nEDUCATION\nB.Tech",
+    "parsed_resume": {
+      "skills": ["Javascrip", "React", "Responsve Design", "Git"],
+      "experience": [
+        "Frontend Developer | 2024 - Present",
+        "Built React interfaces with Javascrip and improved responsve design across landing pages.",
+        "Used Git for version control and debugged UI issues during releases."
+      ],
+      "projects": [],
+      "education": ["B.Tech"]
+    },
+    "expected": {
+      "score_range": [45, 78],
+      "matched_requirements": ["JavaScript", "React", "Responsive Design", "Git", "Troubleshooting"],
+      "missing_requirements": ["CSS"]
+    }
   }
 ]

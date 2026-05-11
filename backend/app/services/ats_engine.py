@@ -1,4 +1,5 @@
 import re
+from difflib import SequenceMatcher
 from datetime import datetime
 
 from sentence_transformers import SentenceTransformer
@@ -132,7 +133,7 @@ REQUIREMENT_LIBRARY = [
         "name": "Troubleshooting",
         "category": "engineering",
         "weight": 2,
-        "aliases": ["troubleshoot", "troubleshooting", "troubleshot", "debug", "debugging", "fix bugs", "fixed bugs", "resolved issues", "issue resolution"],
+        "aliases": ["troubleshoot", "troubleshooting", "troubleshot", "debug", "debugged", "debugging", "fix bugs", "fixed bugs", "resolved issues", "issue resolution"],
     },
     {
         "name": "SQL",
@@ -796,6 +797,67 @@ def _contains_alias(text, alias):
     return re.search(pattern, text) is not None
 
 
+def _alias_similarity(left, right):
+    return SequenceMatcher(None, left, right).ratio()
+
+
+def _fuzzy_threshold(alias):
+    alias_length = len(alias.replace(" ", ""))
+
+    if alias_length <= 3:
+        return 1.01
+
+    if alias_length <= 6:
+        return 0.94
+
+    return 0.88
+
+
+def _candidate_ngrams(text, max_words=4):
+    normalized = _normalize_phrase(text)
+    tokens = [token for token in normalized.split() if token]
+    candidates = set()
+
+    for size in range(1, max_words + 1):
+        for index in range(0, max(0, len(tokens) - size + 1)):
+            candidates.add(" ".join(tokens[index:index + size]))
+
+    return candidates
+
+
+def _find_fuzzy_alias(aliases, text):
+    candidates = _candidate_ngrams(text)
+    best = None
+
+    for alias in aliases:
+        normalized_alias = _normalize_phrase(alias)
+        threshold = _fuzzy_threshold(normalized_alias)
+
+        if threshold > 1:
+            continue
+
+        alias_words = len(normalized_alias.split())
+
+        for candidate in candidates:
+            if abs(len(candidate.split()) - alias_words) > 1:
+                continue
+
+            length_gap = abs(len(candidate) - len(normalized_alias))
+            if length_gap > max(3, round(len(normalized_alias) * 0.35)):
+                continue
+
+            score = _alias_similarity(normalized_alias, candidate)
+
+            if score >= threshold and (not best or score > best["score"]):
+                best = {
+                    "alias": alias,
+                    "candidate": candidate,
+                    "score": score,
+                }
+
+    return best
+
+
 def _split_evidence_units(text):
     if not text:
         return []
@@ -813,6 +875,21 @@ def _find_best_evidence(aliases, text):
                 return unit
 
     return ""
+
+
+def _find_best_fuzzy_evidence(aliases, text):
+    best_unit = None
+
+    for unit in _split_evidence_units(text):
+        fuzzy_hit = _find_fuzzy_alias(aliases, unit)
+
+        if fuzzy_hit and (not best_unit or fuzzy_hit["score"] > best_unit["score"]):
+            best_unit = {
+                "text": unit,
+                **fuzzy_hit,
+            }
+
+    return best_unit
 
 
 def _extract_competency_set(text):
@@ -969,7 +1046,7 @@ def _proof_strength(score):
     return "weak"
 
 
-def _collect_matching_evidence(aliases, parsed_resume, resume_text):
+def _collect_matching_evidence(aliases, parsed_resume, resume_text, allow_fuzzy=False):
     hits = []
 
     for section_name in SECTION_LABELS:
@@ -995,10 +1072,17 @@ def _collect_matching_evidence(aliases, parsed_resume, resume_text):
                 continue
 
             normalized_candidate = _normalize_text(candidate)
+            exact_match = any(_contains_alias(normalized_candidate, alias) for alias in aliases)
+            fuzzy_hit = None
 
-            if any(_contains_alias(normalized_candidate, alias) for alias in aliases):
+            if not exact_match and allow_fuzzy:
+                fuzzy_hit = _find_fuzzy_alias(aliases, candidate)
+
+            if exact_match or fuzzy_hit:
                 display_name = section_name.title()
                 score, recency_score, duration_score = _evidence_signal_score(display_name, candidate)
+                if fuzzy_hit:
+                    score *= fuzzy_hit["score"]
                 hits.append(
                     {
                         "section": display_name,
@@ -1006,6 +1090,10 @@ def _collect_matching_evidence(aliases, parsed_resume, resume_text):
                         "score": score,
                         "recency_score": recency_score,
                         "duration_score": duration_score,
+                        "match_type": "fuzzy" if fuzzy_hit else "exact",
+                        "matched_alias": fuzzy_hit["alias"] if fuzzy_hit else "",
+                        "matched_text": fuzzy_hit["candidate"] if fuzzy_hit else "",
+                        "fuzzy_score": fuzzy_hit["score"] if fuzzy_hit else 1,
                     }
                 )
 
@@ -1021,6 +1109,30 @@ def _collect_matching_evidence(aliases, parsed_resume, resume_text):
                     "score": score,
                     "recency_score": recency_score,
                     "duration_score": duration_score,
+                    "match_type": "exact",
+                    "matched_alias": "",
+                    "matched_text": "",
+                    "fuzzy_score": 1,
+                }
+            )
+
+    if not hits and allow_fuzzy:
+        fuzzy_fallback = _find_best_fuzzy_evidence(aliases, resume_text)
+
+        if fuzzy_fallback:
+            score, recency_score, duration_score = _evidence_signal_score("General", fuzzy_fallback["text"])
+            score *= fuzzy_fallback["score"]
+            hits.append(
+                {
+                    "section": "General",
+                    "text": fuzzy_fallback["text"],
+                    "score": score,
+                    "recency_score": recency_score,
+                    "duration_score": duration_score,
+                    "match_type": "fuzzy",
+                    "matched_alias": fuzzy_fallback["alias"],
+                    "matched_text": fuzzy_fallback["candidate"],
+                    "fuzzy_score": fuzzy_fallback["score"],
                 }
             )
 
@@ -1409,6 +1521,7 @@ def extract_job_requirements(job_description):
 def _match_requirement(requirement, resume_text, parsed_resume):
     normalized_resume = _normalize_text(resume_text)
     matched_alias = None
+    fuzzy_match = None
     found_in_sections = []
 
     for alias in requirement["aliases"]:
@@ -1416,23 +1529,36 @@ def _match_requirement(requirement, resume_text, parsed_resume):
             matched_alias = alias
             break
 
+    if not matched_alias:
+        fuzzy_match = _find_fuzzy_alias(requirement["aliases"], resume_text)
+        if fuzzy_match:
+            matched_alias = fuzzy_match["alias"]
+
     for section_name in SECTION_LABELS:
         section_content = parsed_resume.get(section_name, [])
         section_text = " ".join(str(item) for item in section_content)
         normalized_section = _normalize_text(section_text)
 
-        if any(_contains_alias(normalized_section, alias) for alias in requirement["aliases"]):
+        section_matches = any(_contains_alias(normalized_section, alias) for alias in requirement["aliases"])
+
+        if not section_matches and fuzzy_match:
+            section_matches = bool(_find_fuzzy_alias(requirement["aliases"], section_text))
+
+        if section_matches:
             found_in_sections.append(section_name.title())
 
     if matched_alias:
         evidence_hits = _collect_matching_evidence(
             requirement["aliases"],
             parsed_resume,
-            resume_text
+            resume_text,
+            allow_fuzzy=bool(fuzzy_match)
         )
         best_hit = evidence_hits[0] if evidence_hits else None
         evidence = best_hit["text"] if best_hit else ""
         confidence = best_hit["score"] if best_hit else 0.78
+        if fuzzy_match:
+            confidence *= 0.92
         if requirement.get("recency_required") and best_hit:
             confidence *= best_hit["recency_score"]
         proof_strength = _proof_strength(confidence)
@@ -1446,6 +1572,9 @@ def _match_requirement(requirement, resume_text, parsed_resume):
             "priority": requirement.get("priority", "supporting"),
             "matched": True,
             "matched_alias": matched_alias,
+            "match_type": "fuzzy" if fuzzy_match else "exact",
+            "matched_text": fuzzy_match["candidate"] if fuzzy_match else matched_alias,
+            "fuzzy_score": round(fuzzy_match["score"] * 100) if fuzzy_match else 100,
             "evidence": evidence,
             "sections": found_in_sections,
             "confidence": confidence,
@@ -1461,6 +1590,9 @@ def _match_requirement(requirement, resume_text, parsed_resume):
         "priority": requirement.get("priority", "supporting"),
         "matched": False,
         "matched_alias": "",
+        "match_type": "missing",
+        "matched_text": "",
+        "fuzzy_score": 0,
         "evidence": "",
         "sections": [],
         "confidence": 0,
