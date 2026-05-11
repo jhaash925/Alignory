@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --page-bg: #f3f6f2;
+    --ink-strong: #10231c;
+  }
+
+  html {
+    background:
+      radial-gradient(circle at top left, rgba(15, 118, 110, 0.16), transparent 30%),
+      radial-gradient(circle at top right, rgba(217, 119, 6, 0.14), transparent 26%),
+      linear-gradient(180deg, #f8fbf8 0%, var(--page-bg) 42%, #ecf2ef 100%);
+    color: var(--ink-strong);
+  }
+
+  body {
+    min-height: 100vh;
+    background: transparent;
+    color: var(--ink-strong);
+    font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+    letter-spacing: -0.02em;
+  }
+}

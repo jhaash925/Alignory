@@ -1,0 +1,12 @@
+Project: E-commerce Frontend
+Built a responsive e-commerce website using React and Tailwind CSS.
+
+Project: Portfolio Website
+Developed a personal portfolio site using React and deployed it on Vercel.
+
+Skills
+React
+JavaScript
+REST APIs
+Git
+Tailwind CSS

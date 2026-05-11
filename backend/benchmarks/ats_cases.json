@@ -1,0 +1,302 @@
+[
+  {
+    "id": "frontend-strong-match",
+    "description": "Frontend-focused resume should score strongly against a web developer role.",
+    "job_description": "We are looking for a web developer with strong proficiency in HTML, CSS, JavaScript, responsive design, Git, and web technologies. The candidate should collaborate with design teams, build user-friendly websites, and troubleshoot issues.",
+    "resume_text": "ASHUTOSH\nEmail: ash@example.com\nPhone: +91 9999999999\n\nSKILLS\nHTML\nCSS\nJavaScript\nReact\nGit\nResponsive Design\n\nEXPERIENCE\nFrontend Developer | 2024 - Present\n- Developed responsive web interfaces using HTML, CSS, JavaScript, and React.\n- Collaborated with designers to improve usability and visual consistency.\n- Troubleshot UI bugs and improved performance across key pages.\n\nPROJECTS\nPortfolio Website | 2023\n- Built a personal portfolio using React and modern web technologies.\n\nEDUCATION\nB.Tech in Computer Science",
+    "parsed_resume": {
+      "skills": ["HTML", "CSS", "JavaScript", "React", "Git", "Responsive Design"],
+      "experience": [
+        "Frontend Developer | 2024 - Present",
+        "Developed responsive web interfaces using HTML, CSS, JavaScript, and React.",
+        "Collaborated with designers to improve usability and visual consistency.",
+        "Troubleshot UI bugs and improved performance across key pages."
+      ],
+      "projects": [
+        "Portfolio Website | 2023",
+        "Built a personal portfolio using React and modern web technologies."
+      ],
+      "education": ["B.Tech in Computer Science"]
+    },
+    "expected": {
+      "score_range": [65, 90],
+      "matched_requirements": ["HTML", "CSS", "JavaScript", "Git", "Responsive Design"],
+      "missing_requirements": []
+    }
+  },
+  {
+    "id": "backend-partial-match",
+    "description": "Backend-leaning resume should partially match a frontend-heavy JD and miss key UI skills.",
+    "job_description": "Hiring a frontend engineer with HTML, CSS, JavaScript, responsive design, React, and web design principles. Must collaborate closely with product and design teams.",
+    "resume_text": "ASHUTOSH\nEmail: ash@example.com\nPhone: +91 9999999999\n\nSKILLS\nJava\nPython\nSQL\nGit\nNode.js\n\nEXPERIENCE\nBackend Developer | 2022 - Present\n- Built REST APIs using Node.js and Express.\n- Worked with SQL databases and backend integrations.\n- Collaborated with cross-functional teams on delivery.\n\nPROJECTS\nInventory API | 2023\n- Developed CRUD endpoints and authentication for internal tools.\n\nEDUCATION\nB.Tech in Information Technology",
+    "parsed_resume": {
+      "skills": ["Java", "Python", "SQL", "Git", "Node.js"],
+      "experience": [
+        "Backend Developer | 2022 - Present",
+        "Built REST APIs using Node.js and Express.",
+        "Worked with SQL databases and backend integrations.",
+        "Collaborated with cross-functional teams on delivery."
+      ],
+      "projects": [
+        "Inventory API | 2023",
+        "Developed CRUD endpoints and authentication for internal tools."
+      ],
+      "education": ["B.Tech in Information Technology"]
+    },
+    "expected": {
+      "score_range": [25, 55],
+      "matched_requirements": [],
+      "missing_requirements": ["HTML", "CSS", "React", "Responsive Design"]
+    }
+  },
+  {
+    "id": "generic-resume-low-match",
+    "description": "A generic resume without core stack evidence should score lower for a modern web role.",
+    "job_description": "Seeking a web developer with HTML, CSS, JavaScript, version control, responsive design, troubleshooting, and frameworks or libraries experience.",
+    "resume_text": "Candidate Resume\nEmail: candidate@example.com\nPhone: +91 8888888888\n\nSKILLS\nCommunication\nLeadership\nMS Office\nTeamwork\n\nEXPERIENCE\nOperations Associate | 2021 - Present\n- Coordinated tasks across internal teams.\n- Prepared reports and handled documentation.\n\nEDUCATION\nB.Com",
+    "parsed_resume": {
+      "skills": ["Communication", "Leadership", "Teamwork"],
+      "experience": [
+        "Operations Associate | 2021 - Present",
+        "Coordinated tasks across internal teams.",
+        "Prepared reports and handled documentation."
+      ],
+      "projects": [],
+      "education": ["B.Com"]
+    },
+    "expected": {
+      "score_range": [5, 30],
+      "matched_requirements": [],
+      "missing_requirements": ["HTML", "CSS", "JavaScript", "Version Control", "Responsive Design"]
+    }
+  },
+  {
+    "id": "fullstack-strong-match",
+    "description": "A full-stack resume should score strongly when the JD asks for frontend and backend evidence together.",
+    "job_description": "Looking for a full-stack developer with JavaScript, React, Node.js, Express, REST APIs, Git, SQL, and responsive web development experience. Must build end-to-end features and collaborate with product teams.",
+    "resume_text": "ASHUTOSH\nEmail: ash@example.com\nPhone: +91 9999999999\n\nSKILLS\nJavaScript\nReact\nNode.js\nExpress\nGit\nSQL\nREST APIs\nResponsive Design\n\nEXPERIENCE\nFull Stack Developer | 2023 - Present\n- Built end-to-end features using React, Node.js, Express, and SQL.\n- Developed REST APIs and responsive user interfaces for internal products.\n- Collaborated with product and design teams on feature delivery.\n\nPROJECTS\nBooking Platform | 2024\n- Created a full-stack booking application with authentication and CRUD workflows.\n\nEDUCATION\nB.Tech in Computer Science",
+    "parsed_resume": {
+      "skills": ["JavaScript", "React", "Node.js", "Express", "Git", "SQL", "REST APIs", "Responsive Design"],
+      "experience": [
+        "Full Stack Developer | 2023 - Present",
+        "Built end-to-end features using React, Node.js, Express, and SQL.",
+        "Developed REST APIs and responsive user interfaces for internal products.",
+        "Collaborated with product and design teams on feature delivery."
+      ],
+      "projects": [
+        "Booking Platform | 2024",
+        "Created a full-stack booking application with authentication and CRUD workflows."
+      ],
+      "education": ["B.Tech in Computer Science"]
+    },
+    "expected": {
+      "score_range": [70, 92],
+      "matched_requirements": ["JavaScript", "React", "Node.js", "Express", "REST APIs", "Git", "SQL"],
+      "missing_requirements": []
+    }
+  },
+  {
+    "id": "frontend-skills-only-weak-proof",
+    "description": "A resume that lists frontend skills but has weak project or experience evidence should score in the middle, not at the top.",
+    "job_description": "We need a frontend developer with HTML, CSS, JavaScript, React, responsive design, troubleshooting, and strong web development experience.",
+    "resume_text": "Candidate\nEmail: test@example.com\nPhone: +91 7777777777\n\nSKILLS\nHTML\nCSS\nJavaScript\nReact\nResponsive Design\n\nEXPERIENCE\nCustomer Support Associate | 2022 - Present\n- Assisted users with account and login issues.\n- Coordinated with technical teams on support tickets.\n\nPROJECTS\nPortfolio Site\n- Personal website created for learning purposes.\n\nEDUCATION\nB.Sc in Computer Science",
+    "parsed_resume": {
+      "skills": ["HTML", "CSS", "JavaScript", "React", "Responsive Design"],
+      "experience": [
+        "Customer Support Associate | 2022 - Present",
+        "Assisted users with account and login issues.",
+        "Coordinated with technical teams on support tickets."
+      ],
+      "projects": [
+        "Portfolio Site",
+        "Personal website created for learning purposes."
+      ],
+      "education": ["B.Sc in Computer Science"]
+    },
+    "expected": {
+      "score_range": [45, 70],
+      "matched_requirements": ["HTML", "CSS", "JavaScript", "React", "Responsive Design"],
+      "missing_requirements": ["Troubleshooting"]
+    }
+  },
+  {
+    "id": "backend-strong-match",
+    "description": "A backend-oriented resume should score strongly for a backend/API role with data and integration work.",
+    "job_description": "Hiring a backend developer with Node.js, Express, SQL, REST APIs, Git, troubleshooting, and strong API development experience. Must build reliable backend services and collaborate with engineering teams.",
+    "resume_text": "ASHUTOSH\nEmail: ash@example.com\nPhone: +91 9999999999\n\nSKILLS\nNode.js\nExpress\nSQL\nGit\nREST APIs\nJavaScript\n\nEXPERIENCE\nBackend Developer | 2023 - Present\n- Built backend services with Node.js, Express, SQL, and REST APIs.\n- Troubleshot production issues and improved API reliability.\n- Worked with engineering teams on releases and code delivery.\n\nPROJECTS\nAdmin API Platform | 2024\n- Developed API endpoints, authentication, and database integrations.\n\nEDUCATION\nB.Tech in Information Technology",
+    "parsed_resume": {
+      "skills": ["Node.js", "Express", "SQL", "Git", "REST APIs", "JavaScript"],
+      "experience": [
+        "Backend Developer | 2023 - Present",
+        "Built backend services with Node.js, Express, SQL, and REST APIs.",
+        "Troubleshot production issues and improved API reliability.",
+        "Worked with engineering teams on releases and code delivery."
+      ],
+      "projects": [
+        "Admin API Platform | 2024",
+        "Developed API endpoints, authentication, and database integrations."
+      ],
+      "education": ["B.Tech in Information Technology"]
+    },
+    "expected": {
+      "score_range": [68, 90],
+      "matched_requirements": ["Node.js", "Express", "SQL", "REST APIs", "Git", "Troubleshooting"],
+      "missing_requirements": []
+    }
+  },
+  {
+    "id": "outdated-experience-match",
+    "description": "A resume with relevant but older dated frontend experience should score moderately, not like a recent strong match.",
+    "job_description": "Seeking a web developer with HTML, CSS, JavaScript, React, responsive design, and recent experience building modern web interfaces.",
+    "resume_text": "Candidate Resume\nEmail: candidate@example.com\nPhone: +91 6666666666\n\nSKILLS\nHTML\nCSS\nJavaScript\nReact\nResponsive Design\n\nEXPERIENCE\nFrontend Developer | 2018 - 2020\n- Built web interfaces using HTML, CSS, JavaScript, and React.\n- Developed responsive layouts and worked with design handoff.\n\nPROJECTS\nLanding Pages | 2019\n- Created promotional pages and UI components.\n\nEDUCATION\nBCA",
+    "parsed_resume": {
+      "skills": ["HTML", "CSS", "JavaScript", "React", "Responsive Design"],
+      "experience": [
+        "Frontend Developer | 2018 - 2020",
+        "Built web interfaces using HTML, CSS, JavaScript, and React.",
+        "Developed responsive layouts and worked with design handoff."
+      ],
+      "projects": [
+        "Landing Pages | 2019",
+        "Created promotional pages and UI components."
+      ],
+      "education": ["BCA"]
+    },
+    "expected": {
+      "score_range": [50, 75],
+      "matched_requirements": ["HTML", "CSS", "JavaScript", "React", "Responsive Design"],
+      "missing_requirements": []
+    }
+  },
+  {
+    "id": "operations-strong-match",
+    "description": "An operations resume should score strongly for an operations coordinator role with reporting, documentation, and stakeholder work.",
+    "job_description": "Hiring an operations coordinator with Excel, reporting, documentation, stakeholder management, process improvement, and project coordination experience. Must support workflows, maintain records, and collaborate across teams.",
+    "resume_text": "Candidate Resume\nEmail: ops@example.com\nPhone: +91 5555555555\n\nSKILLS\nExcel\nReporting\nDocumentation\nStakeholder Management\nProcess Improvement\nProject Coordination\n\nEXPERIENCE\nOperations Coordinator | 2023 - Present\n- Built weekly reports in Excel and maintained operational dashboards.\n- Documented workflows, managed records, and improved internal processes.\n- Coordinated projects across cross-functional stakeholders and support teams.\n\nEDUCATION\nBBA",
+    "parsed_resume": {
+      "skills": ["Excel", "Reporting", "Documentation", "Stakeholder Management", "Process Improvement", "Project Coordination"],
+      "experience": [
+        "Operations Coordinator | 2023 - Present",
+        "Built weekly reports in Excel and maintained operational dashboards.",
+        "Documented workflows, managed records, and improved internal processes.",
+        "Coordinated projects across cross-functional stakeholders and support teams."
+      ],
+      "projects": [],
+      "education": ["BBA"]
+    },
+    "expected": {
+      "score_range": [60, 90],
+      "matched_requirements": ["Excel", "Reporting", "Documentation", "Stakeholder Management", "Process Improvement", "Project Coordination"],
+      "missing_requirements": []
+    }
+  },
+  {
+    "id": "customer-support-strong-match",
+    "description": "A customer support resume should score strongly for a support role with CRM, troubleshooting, and escalation handling.",
+    "job_description": "Looking for a customer support specialist with customer support experience, CRM familiarity, communication skills, troubleshooting ability, and escalation management. Must resolve tickets efficiently and collaborate with internal teams.",
+    "resume_text": "Candidate Resume\nEmail: support@example.com\nPhone: +91 4444444444\n\nSKILLS\nCustomer Support\nCRM\nCommunication\nTroubleshooting\nEscalation Management\n\nEXPERIENCE\nCustomer Support Specialist | 2022 - Present\n- Resolved customer tickets and account issues using CRM tools.\n- Troubleshot product issues and managed escalations for high-priority cases.\n- Collaborated with product and engineering teams to improve resolution quality.\n\nEDUCATION\nB.A.",
+    "parsed_resume": {
+      "skills": ["Customer Support", "CRM", "Communication", "Troubleshooting", "Escalation Management"],
+      "experience": [
+        "Customer Support Specialist | 2022 - Present",
+        "Resolved customer tickets and account issues using CRM tools.",
+        "Troubleshot product issues and managed escalations for high-priority cases.",
+        "Collaborated with product and engineering teams to improve resolution quality."
+      ],
+      "projects": [],
+      "education": ["B.A."]
+    },
+    "expected": {
+      "score_range": [60, 90],
+      "matched_requirements": ["Customer Support", "CRM", "Communication", "Troubleshooting", "Escalation Management"],
+      "missing_requirements": []
+    }
+  },
+  {
+    "id": "marketing-partial-match",
+    "description": "A broadly communicative resume without real marketing evidence should only partially match a digital marketing JD.",
+    "job_description": "Seeking a digital marketing associate with SEO, marketing, content creation, campaign management, reporting, and data analysis experience. Must collaborate across teams and improve campaign performance.",
+    "resume_text": "Candidate Resume\nEmail: comms@example.com\nPhone: +91 3333333333\n\nSKILLS\nCommunication\nReporting\nMS Office\nTeamwork\n\nEXPERIENCE\nOperations Assistant | 2021 - Present\n- Prepared weekly reports and coordinated internal communication.\n- Supported documentation and scheduling across teams.\n\nEDUCATION\nB.Com",
+    "parsed_resume": {
+      "skills": ["Communication", "Reporting", "Teamwork"],
+      "experience": [
+        "Operations Assistant | 2021 - Present",
+        "Prepared weekly reports and coordinated internal communication.",
+        "Supported documentation and scheduling across teams."
+      ],
+      "projects": [],
+      "education": ["B.Com"]
+    },
+    "expected": {
+      "score_range": [15, 45],
+      "matched_requirements": ["Reporting"],
+      "missing_requirements": ["SEO", "Marketing", "Content Creation", "Campaign Management"]
+    }
+  },
+  {
+    "id": "finance-strong-match",
+    "description": "A finance resume should score strongly for a finance analyst style role with reporting, budgeting, and forecasting.",
+    "job_description": "Hiring a finance analyst with Excel, financial reporting, budgeting, forecasting, data analysis, and stakeholder management experience. Must prepare monthly reports and support business decisions.",
+    "resume_text": "Candidate Resume\nEmail: finance@example.com\nPhone: +91 2222222222\n\nSKILLS\nExcel\nFinancial Reporting\nBudgeting\nForecasting\nData Analysis\nStakeholder Management\n\nEXPERIENCE\nFinance Analyst | 2023 - Present\n- Prepared monthly financial reports in Excel and analyzed budget performance.\n- Built forecasts, tracked spending, and supported stakeholder reviews.\n- Presented data-driven recommendations to business teams.\n\nEDUCATION\nB.Com",
+    "parsed_resume": {
+      "skills": ["Excel", "Financial Reporting", "Budgeting", "Forecasting", "Data Analysis", "Stakeholder Management"],
+      "experience": [
+        "Finance Analyst | 2023 - Present",
+        "Prepared monthly financial reports in Excel and analyzed budget performance.",
+        "Built forecasts, tracked spending, and supported stakeholder reviews.",
+        "Presented data-driven recommendations to business teams."
+      ],
+      "projects": [],
+      "education": ["B.Com"]
+    },
+    "expected": {
+      "score_range": [65, 92],
+      "matched_requirements": ["Excel", "Financial Reporting", "Budgeting", "Forecasting", "Data Analysis", "Stakeholder Management"],
+      "missing_requirements": []
+    }
+  },
+  {
+    "id": "admin-strong-match",
+    "description": "An administrative resume should score strongly for an admin role with scheduling, office work, records, and coordination.",
+    "job_description": "Looking for an administrative assistant with Microsoft Office, scheduling, documentation, data entry, project coordination, and vendor management experience. Must maintain records and support office operations.",
+    "resume_text": "Candidate Resume\nEmail: admin@example.com\nPhone: +91 1111111111\n\nSKILLS\nMicrosoft Office\nScheduling\nDocumentation\nData Entry\nProject Coordination\nVendor Management\n\nEXPERIENCE\nAdministrative Assistant | 2022 - Present\n- Managed calendars, appointments, and scheduling for internal teams.\n- Maintained records, completed data entry, and supported documentation workflows.\n- Coordinated vendors and office operations across departments.\n\nEDUCATION\nB.A.",
+    "parsed_resume": {
+      "skills": ["Microsoft Office", "Scheduling", "Documentation", "Data Entry", "Project Coordination", "Vendor Management"],
+      "experience": [
+        "Administrative Assistant | 2022 - Present",
+        "Managed calendars, appointments, and scheduling for internal teams.",
+        "Maintained records, completed data entry, and supported documentation workflows.",
+        "Coordinated vendors and office operations across departments."
+      ],
+      "projects": [],
+      "education": ["B.A."]
+    },
+    "expected": {
+      "score_range": [65, 92],
+      "matched_requirements": ["Microsoft Office", "Scheduling", "Documentation", "Data Entry", "Project Coordination", "Vendor Management"],
+      "missing_requirements": []
+    }
+  },
+  {
+    "id": "business-analyst-strong-match",
+    "description": "A business analyst resume should score strongly for BA roles with requirements, analysis, reporting, and stakeholder work.",
+    "job_description": "Seeking a business analyst with business analysis, requirements gathering, data analysis, reporting, presentation skills, and stakeholder management. Must work with cross-functional teams and document business needs.",
+    "resume_text": "Candidate Resume\nEmail: ba@example.com\nPhone: +91 1010101010\n\nSKILLS\nBusiness Analysis\nRequirements Gathering\nData Analysis\nReporting\nPresentation Skills\nStakeholder Management\n\nEXPERIENCE\nBusiness Analyst | 2023 - Present\n- Gathered business requirements and documented process needs with stakeholders.\n- Analyzed data, prepared reports, and presented findings to leadership.\n- Worked with cross-functional teams to improve workflow decisions.\n\nEDUCATION\nMBA",
+    "parsed_resume": {
+      "skills": ["Business Analysis", "Requirements Gathering", "Data Analysis", "Reporting", "Presentation Skills", "Stakeholder Management"],
+      "experience": [
+        "Business Analyst | 2023 - Present",
+        "Gathered business requirements and documented process needs with stakeholders.",
+        "Analyzed data, prepared reports, and presented findings to leadership.",
+        "Worked with cross-functional teams to improve workflow decisions."
+      ],
+      "projects": [],
+      "education": ["MBA"]
+    },
+    "expected": {
+      "score_range": [65, 92],
+      "matched_requirements": ["Business Analysis", "Requirements Gathering", "Data Analysis", "Reporting", "Presentation Skills", "Stakeholder Management"],
+      "missing_requirements": []
+    }
+  }
+]
